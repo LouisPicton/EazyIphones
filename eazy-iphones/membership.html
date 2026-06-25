@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership — Eazy iPhones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #070C18; color: white; }
+    h1,h2,h3 { font-family: 'Playfair Display', serif; }
+    .btn-primary { background: #007AFF; transition: background 0.2s; }
+    .btn-primary:hover { background: #0055d4; }
+    .btn-gold { background: linear-gradient(135deg,#F5A623,#E8941A); transition: opacity 0.2s; }
+    .btn-gold:hover { opacity: 0.9; }
+    .btn-outline { border: 1.5px solid rgba(255,255,255,0.25); color: white; transition: all 0.2s; }
+    .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+    .muted { color: #8B95A8; }
+    .green { color: #30D158; }
+    .gold { color: #F5A623; }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; transition: border-color 0.2s; }
+    .card:hover { border-color: rgba(255,255,255,0.16); }
+    .form-input { border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px 16px; font-size: 14px; width: 100%; transition: border-color 0.2s; outline: none; font-family: 'Inter', sans-serif; background: rgba(255,255,255,0.05); color: white; }
+    .form-input:focus { border-color: #007AFF; box-shadow: 0 0 0 3px rgba(0,122,255,0.12); }
+    .form-input option { background: #0D1526; }
+    .form-label { font-size: 13px; font-weight: 600; color: #9CA3AF; margin-bottom: 6px; display: block; }
+    .faq-border { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hero-glow { background: radial-gradient(ellipse at 50% 0%,rgba(0,122,255,0.2) 0%,transparent 70%); }
+  </style>
+</head>
+<body x-data="{ mobileMenu: false, submitted: false }">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 border-b" style="background:#07080F;border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <svg width="36" height="50" viewBox="0 0 36 50" fill="none"><rect x="0.5" y="0.5" width="35" height="49" rx="8" fill="#0A1020" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><rect x="11" y="4" width="14" height="5" rx="2.5" fill="#000"/><text x="1" y="44" font-family="Playfair Display, serif" font-size="34" font-weight="900" fill="white">E</text><circle cx="30" cy="18" r="3" fill="white"/><rect x="27.5" y="24" width="5" height="19" rx="2.5" fill="white"/></svg>
+          <div><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:15px;letter-spacing:2px;">EAZY</div><div style="font-size:10px;letter-spacing:2px;color:#8B95A8;margin-top:-2px;">iPHONES</div></div>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="buy.html" class="muted hover:text-white text-sm">Buy</a>
+          <a href="sell.html" class="muted hover:text-white text-sm">Sell</a>
+          <a href="part-exchange.html" class="muted hover:text-white text-sm">Part Exchange</a>
+          <a href="membership.html" class="text-white text-sm font-semibold">Membership</a>
+          <a href="#apply" class="btn-gold text-white px-5 py-2 rounded-full text-sm font-semibold">Apply Now</a>
+        </div>
+        <button @click="mobileMenu = !mobileMenu" class="md:hidden text-white p-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div x-show="mobileMenu" x-transition class="md:hidden border-t px-4 py-4 space-y-3" style="border-color:rgba(255,255,255,0.06);background:#07080F">
+      <a href="buy.html" class="block muted text-sm py-2">Buy</a>
+      <a href="sell.html" class="block muted text-sm py-2">Sell</a>
+      <a href="part-exchange.html" class="block muted text-sm py-2">Part Exchange</a>
+      <a href="membership.html" class="block text-white text-sm font-semibold py-2">Membership</a>
+      <a href="#apply" class="block btn-gold text-white px-5 py-2 rounded-full text-sm font-semibold text-center mt-2">Apply Now</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="py-24 px-4 text-center relative overflow-hidden" style="background:#07080F">
+    <div class="absolute inset-0 hero-glow pointer-events-none"></div>
+    <div class="relative max-w-4xl mx-auto">
+      <span class="inline-block text-black text-xs font-black px-4 py-1.5 rounded-full mb-6" style="background:#F5A623">LIMITED SPACES AVAILABLE</span>
+      <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+        Turn iPhone Flipping<br>
+        <span style="color:#007AFF">Into Real Income.</span>
+      </h1>
+      <p class="muted text-xl max-w-2xl mx-auto mb-10 leading-relaxed">Join the Eazy iPhones Membership and get the exact system, mentorship, and support to build a profitable iPhone reselling business — from scratch.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#apply" class="btn-gold text-white px-10 py-4 rounded-full text-base font-bold">Apply for Membership →</a>
+        <a href="#how-it-works" class="btn-outline px-10 py-4 rounded-full text-base font-semibold">See How It Works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE TRACKER -->
+  <section class="py-16 px-4" style="background:#0A1020">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-2xl font-black text-center mb-2">Live Performance Tracker</h2>
+      <p class="muted text-center text-sm mb-10">Real numbers from our member network — updated weekly.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card p-8 text-center">
+          <div class="muted text-sm font-medium mb-2">This Week's Member Revenue</div>
+          <div class="text-6xl font-black mb-2" id="revenueCounter">£0</div>
+          <div class="text-xs muted">Across all active members</div>
+          <div class="mt-4 h-2 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.08)">
+            <div class="h-full rounded-full" style="width:68%;background:#007AFF;transition:width 2s ease"></div>
+          </div>
+          <div class="text-xs muted mt-1">68% of weekly target</div>
+        </div>
+        <div class="card p-8 text-center">
+          <div class="muted text-sm font-medium mb-2">This Week's Net Profit</div>
+          <div class="text-6xl font-black green mb-2" id="profitCounter">£0</div>
+          <div class="text-xs muted">After all costs</div>
+          <div class="mt-4 h-2 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.08)">
+            <div class="h-full rounded-full" style="width:82%;background:#30D158;transition:width 2s ease"></div>
+          </div>
+          <div class="text-xs muted mt-1">82% of weekly target</div>
+        </div>
+      </div>
+      <p class="text-center text-xs mt-6" style="color:#4B5563">Join to access the full weekly breakdown and member leaderboard.</p>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section class="py-16 px-4" style="background:#070C18">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-black mb-2">Everything You Get</h2>
+        <p class="muted">A complete system for building a profitable iPhone reselling business.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="card p-6"><div class="text-3xl mb-3">📋</div><h3 class="font-bold text-base mb-2">Step-by-Step System</h3><p class="muted text-sm">The exact process Ethan uses to source, assess, and flip iPhones for consistent profit.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-3">📞</div><h3 class="font-bold text-base mb-2">1:1 Onboarding Call</h3><p class="muted text-sm">A personal onboarding session with Ethan to set your targets, strategy, and first steps.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-3">👥</div><h3 class="font-bold text-base mb-2">Private Community</h3><p class="muted text-sm">Access to a private members group. Share deals, get advice, and learn from active resellers.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-3">📊</div><h3 class="font-bold text-base mb-2">Live Performance Tracker</h3><p class="muted text-sm">Weekly revenue and profit data from the member network to benchmark your progress.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-3">🔍</div><h3 class="font-bold text-base mb-2">Sourcing Secrets</h3><p class="muted text-sm">Exactly where and how to find iPhones at below-market prices — the part most people get wrong.</p></div>
+        <div class="card p-6"><div class="text-3xl mb-3">💰</div><h3 class="font-bold text-base mb-2">Profit Framework</h3><p class="muted text-sm">How to assess battery health, grade condition, and price devices to maximise margin every time.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="py-16 px-4" style="background:#0A1020">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-2xl font-black mb-3">Watch: How the Membership Works</h2>
+      <p class="muted text-sm mb-8">Hear directly from Ethan about what's inside and what members are achieving.</p>
+      <div class="rounded-2xl overflow-hidden border aspect-video flex items-center justify-center" style="border-color:rgba(255,255,255,0.08);background:#0D1526">
+        <div class="text-center"><div class="text-5xl mb-3">▶️</div><div class="muted text-sm">Membership Overview Video</div><div class="text-xs mt-1" style="color:#4B5563">Replace with Ethan's promotional video</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW TO JOIN -->
+  <section id="how-it-works" class="py-16 px-4" style="background:#070C18">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-black text-center mb-12">How to Join</h2>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-lg mx-auto mb-3" style="background:rgba(0,122,255,0.15);border:1px solid rgba(0,122,255,0.3)">📝</div><div class="text-xs font-bold mb-1" style="color:#60a5fa">STEP 1</div><div class="font-bold text-sm mb-1">Apply Below</div><div class="muted text-xs">Complete the application form</div></div>
+        <div><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-lg mx-auto mb-3" style="background:rgba(0,122,255,0.15);border:1px solid rgba(0,122,255,0.3)">✅</div><div class="text-xs font-bold mb-1" style="color:#60a5fa">STEP 2</div><div class="font-bold text-sm mb-1">Get Approved</div><div class="muted text-xs">Ethan reviews your application</div></div>
+        <div><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-lg mx-auto mb-3" style="background:rgba(0,122,255,0.15);border:1px solid rgba(0,122,255,0.3)">💳</div><div class="text-xs font-bold mb-1" style="color:#60a5fa">STEP 3</div><div class="font-bold text-sm mb-1">Secure Your Spot</div><div class="muted text-xs">Pay your membership fee</div></div>
+        <div><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-lg mx-auto mb-3" style="background:rgba(0,122,255,0.15);border:1px solid rgba(0,122,255,0.3)">📞</div><div class="text-xs font-bold mb-1" style="color:#60a5fa">STEP 4</div><div class="font-bold text-sm mb-1">Book Your Call</div><div class="muted text-xs">Book your 1:1 with Ethan via Calendly</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="py-16 px-4" style="background:#0A1020">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl font-black text-center mb-12">Member Results</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="card p-6"><div class="flex mb-3" style="color:#F5A623">⭐⭐⭐⭐⭐</div><p class="muted text-sm mb-4">"Made back the course fee in my first week. The sourcing strategy alone is worth the price of admission."</p><div class="font-semibold text-sm">Ryan K. — Birmingham</div><div class="text-xs mt-1 green">Made £420 profit — Week 1</div></div>
+        <div class="card p-6"><div class="flex mb-3" style="color:#F5A623">⭐⭐⭐⭐⭐</div><p class="muted text-sm mb-4">"I had zero experience. Now I'm doing 3-4 flips a week consistently. The system genuinely works."</p><div class="font-semibold text-sm">James T. — London</div><div class="text-xs mt-1 green">£1,200/month consistent</div></div>
+        <div class="card p-6"><div class="flex mb-3" style="color:#F5A623">⭐⭐⭐⭐⭐</div><p class="muted text-sm mb-4">"The 1:1 call with Ethan was incredibly valuable. He tailored everything to my situation and budget."</p><div class="font-semibold text-sm">Sophie L. — Manchester</div><div class="text-xs mt-1 green">£600 profit in first month</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-16 px-4" style="background:#070C18">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl font-black text-center mb-12">Frequently Asked Questions</h2>
+      <div>
+        <div class="faq-border py-5" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center justify-between w-full text-left"><span class="font-semibold text-base">How much money do I need to get started?</span><span style="color:#60a5fa" class="text-xl ml-4" x-text="open?'−':'+'"></span></button>
+          <div x-show="open" x-transition class="pt-3 muted text-sm">We recommend a starting capital of at least £200-£400 for your first device. You can start small and reinvest your profits as you grow.</div>
+        </div>
+        <div class="faq-border py-5" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center justify-between w-full text-left"><span class="font-semibold text-base">Do I need any previous experience?</span><span style="color:#60a5fa" class="text-xl ml-4" x-text="open?'−':'+'"></span></button>
+          <div x-show="open" x-transition class="pt-3 muted text-sm">No experience needed. The membership is designed to take complete beginners through the entire process step by step.</div>
+        </div>
+        <div class="faq-border py-5" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center justify-between w-full text-left"><span class="font-semibold text-base">How quickly can I make my first profit?</span><span style="color:#60a5fa" class="text-xl ml-4" x-text="open?'−':'+'"></span></button>
+          <div x-show="open" x-transition class="pt-3 muted text-sm">Most members make their first profitable flip within 1-2 weeks. Results depend on your capital and time invested, but the system is designed for fast implementation.</div>
+        </div>
+        <div class="faq-border py-5" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center justify-between w-full text-left"><span class="font-semibold text-base">What does the 1:1 onboarding call involve?</span><span style="color:#60a5fa" class="text-xl ml-4" x-text="open?'−':'+'"></span></button>
+          <div x-show="open" x-transition class="pt-3 muted text-sm">A 60-minute personalised session with Ethan covering your goals, capital, local market, and a tailored action plan to get you started the right way.</div>
+        </div>
+        <div class="faq-border py-5" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center justify-between w-full text-left"><span class="font-semibold text-base">How many spots are available?</span><span style="color:#60a5fa" class="text-xl ml-4" x-text="open?'−':'+'"></span></button>
+          <div x-show="open" x-transition class="pt-3 muted text-sm">Spaces are limited to ensure every member gets proper attention. We only open new spots periodically — apply now to secure your place.</div>
+        </div>
+        <div class="py-5" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center justify-between w-full text-left"><span class="font-semibold text-base">Is there ongoing support after onboarding?</span><span style="color:#60a5fa" class="text-xl ml-4" x-text="open?'−':'+'"></span></button>
+          <div x-show="open" x-transition class="pt-3 muted text-sm">Yes. Members have access to the private group where Ethan and the community are active daily. You're never on your own.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLICATION FORM -->
+  <section id="apply" class="py-20 px-4" style="background:#0A1020">
+    <div class="max-w-2xl mx-auto">
+      <div x-show="submitted" x-transition class="text-center py-16">
+        <div class="text-5xl mb-4">🎉</div>
+        <h3 class="font-black text-2xl mb-3">Application Received!</h3>
+        <p class="muted">Thanks for applying. We'll review your application and get back to you within 24-48 hours. If approved, you'll receive instructions to book your onboarding call with Ethan.</p>
+      </div>
+      <div x-show="!submitted">
+        <div class="text-center mb-10">
+          <span class="inline-block text-black text-xs font-black px-4 py-1.5 rounded-full mb-4" style="background:#F5A623">APPLY NOW</span>
+          <h2 class="text-3xl font-black mb-2">Ready to Join?</h2>
+          <p class="muted text-sm">We review every application personally and only accept members we believe we can genuinely help.</p>
+        </div>
+        <div class="card p-8">
+          <form @submit.prevent="formspreeSubmit($event, $data)" class="space-y-5">
+            <input type="hidden" name="_subject" value="New Membership Application — Eazy iPhones">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label class="form-label">Full Name *</label><input type="text" name="full_name" class="form-input" placeholder="John Smith" required></div>
+              <div><label class="form-label">Location *</label><input type="text" name="location" class="form-input" placeholder="e.g. Manchester" required></div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label class="form-label">Age *</label><input type="number" name="age" class="form-input" placeholder="e.g. 24" min="16" max="99" required></div>
+              <div><label class="form-label">Occupation *</label><input type="text" name="occupation" class="form-input" placeholder="Student / Employed / Self-employed" required></div>
+            </div>
+            <div><label class="form-label">Email Address *</label><input type="email" name="email" class="form-input" placeholder="john@example.com" required></div>
+            <div><label class="form-label">Why do you want to join? *</label><textarea name="motivation" class="form-input" rows="3" placeholder="Tell us what's motivated you and what you're hoping to achieve..." required></textarea></div>
+            <div><label class="form-label">Previous Reselling Experience</label><select name="experience" class="form-input"><option value="">Select...</option><option>No experience — complete beginner</option><option>Sold a few personal items online</option><option>Some reselling experience (not iPhones)</option><option>Some iPhone reselling experience</option><option>Experienced reseller looking to scale</option></select></div>
+            <div><label class="form-label">Available Investment Capital *</label><select name="investment_capital" class="form-input" required><option value="">Select your starting budget...</option><option>Under £200</option><option>£200 - £500</option><option>£500 - £1,000</option><option>£1,000 - £2,000</option><option>£2,000+</option></select></div>
+            <div><label class="form-label">Business Goals *</label><textarea name="business_goals" class="form-input" rows="3" placeholder="Monthly profit target, time you can commit, where you want to be in 6 months..." required></textarea></div>
+            <div class="rounded-xl p-4 text-sm muted" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">🔒 Your application is reviewed personally by Ethan. All information is kept confidential.</div>
+            <button type="submit" class="btn-gold text-white w-full py-4 rounded-xl font-bold text-base">Submit Application →</button>
+            <p class="text-xs muted text-center">We typically respond within 24-48 hours. Not everyone is accepted — we only work with people we know we can help.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 px-4 border-t" style="background:#07080F;border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="flex items-center justify-center gap-3 mb-3">
+        <svg width="24" height="33" viewBox="0 0 36 50" fill="none"><rect x="0.5" y="0.5" width="35" height="49" rx="8" fill="#0A1020" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><rect x="11" y="4" width="14" height="5" rx="2.5" fill="#000"/><text x="1" y="44" font-family="Playfair Display, serif" font-size="34" font-weight="900" fill="white">E</text><circle cx="30" cy="18" r="3" fill="white"/><rect x="27.5" y="24" width="5" height="19" rx="2.5" fill="white"/></svg>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:14px;letter-spacing:2px;">EAZY iPHONES</div>
+      </div>
+      <div class="flex justify-center gap-6 text-sm muted mb-4">
+        <a href="buy.html" class="hover:text-white">Buy</a><a href="sell.html" class="hover:text-white">Sell</a><a href="part-exchange.html" class="hover:text-white">Part Exchange</a><a href="membership.html" class="hover:text-white">Membership</a>
+      </div>
+      <div class="text-xs" style="color:#4B5563">© 2026 Eazy iPhones. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 750, once: true, easing: 'ease-out-cubic' });</script>
+  <script>
+    async function formspreeSubmit(event, data) {
+      try {
+        const r = await fetch('https://formspree.io/f/xkoloylg', {
+          method: 'POST',
+          body: new FormData(event.target),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (r.ok) data.submitted = true;
+        else alert('Something went wrong. Please try again.');
+      } catch {
+        alert('Network error. Please check your connection and try again.');
+      }
+    }
+    function animateCounter(id, target, prefix, duration) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const increment = target / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) { current = target; clearInterval(timer); }
+        el.textContent = prefix + Math.floor(current).toLocaleString();
+      }, 16);
+    }
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        animateCounter('revenueCounter', 8400, '£', 2000);
+        animateCounter('profitCounter', 3200, '£', 2000);
+      }, 600);
+    });
+  </script>
+</body>
+</html>

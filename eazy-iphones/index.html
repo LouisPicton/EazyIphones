@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eazy iPhones — UK's Premium iPhone Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    :root {
+      --bg: #070C18; --bg2: #0D1526; --bg3: #0A1020;
+      --card: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
+      --text: #ffffff; --muted: #8B95A8; --accent: #007AFF; --green: #30D158;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+    h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+    .btn-primary { background: var(--accent); transition: background 0.2s, transform 0.15s, box-shadow 0.2s; }
+    .btn-primary:hover { background: #0055d4; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,122,255,0.4); }
+    .btn-outline { border: 1.5px solid rgba(255,255,255,0.3); color: white; transition: all 0.2s; }
+    .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; }
+    .card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .phone-img { background: linear-gradient(135deg, #111827 0%, #0D1526 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 64px; }
+    .section-alt { background: var(--bg2); }
+    .section-dark { background: var(--bg3); }
+    .muted { color: var(--muted); }
+    .green { color: var(--green); }
+    .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; transition: transform 0.3s, border-color 0.3s; }
+    .stat-card:hover { transform: translateY(-4px); border-color: rgba(0,122,255,0.4); }
+    .badge { background: rgba(0,122,255,0.15); border: 1px solid rgba(0,122,255,0.3); color: #60a5fa; }
+
+    /* ── 3D PHONE ── */
+    .phone-scene { perspective: 1400px; position: relative; width: 340px; height: 520px; margin: 0 auto; }
+    .phone-glow-bg {
+      position: absolute; inset: -60px;
+      background: radial-gradient(ellipse at center, rgba(0,122,255,0.25) 0%, transparent 65%);
+      border-radius: 50%; animation: glowPulse 3.5s ease-in-out infinite;
+    }
+    .phone-body {
+      position: absolute; left: 50%; top: 50%;
+      width: 200px; height: 420px;
+      margin-left: -100px; margin-top: -210px;
+      background: linear-gradient(145deg, #1e2235 0%, #090d19 100%);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 44px;
+      box-shadow: 0 0 60px rgba(0,122,255,0.2), 0 50px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.12);
+      animation: phoneDance 5s ease-in-out infinite;
+      overflow: hidden;
+    }
+    .phone-island {
+      position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+      width: 80px; height: 24px; background: #000; border-radius: 20px; z-index: 5;
+    }
+    .phone-screen {
+      position: absolute; inset: 8px;
+      background: linear-gradient(160deg, #0b1020 0%, #050810 100%);
+      border-radius: 37px; overflow: hidden;
+    }
+    .screen-shine {
+      position: absolute; top: 0; left: 0; right: 0; height: 40%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+    }
+    .screen-content { padding: 52px 16px 16px; }
+    .screen-time { font-size: 44px; font-weight: 700; color: white; text-align: center; margin-bottom: 14px; font-variant-numeric: tabular-nums; }
+    .screen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .app-tile {
+      height: 56px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 24px;
+      animation: appPop 0.4s ease backwards;
+    }
+    .screen-listing { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 10px 12px; text-align: center; }
+    .listing-model { font-size: 11px; color: #8B95A8; margin-bottom: 2px; }
+    .listing-price { font-size: 22px; font-weight: 900; color: white; }
+    .listing-chip { display: inline-block; background: rgba(48,209,88,0.2); color: #30D158; border: 1px solid rgba(48,209,88,0.35); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-top: 4px; }
+    .phone-btn-right { position: absolute; right: -3px; top: 110px; width: 3px; height: 72px; background: rgba(255,255,255,0.18); border-radius: 0 3px 3px 0; }
+    .phone-btn-vol1 { position: absolute; left: -3px; top: 100px; width: 3px; height: 36px; background: rgba(255,255,255,0.18); border-radius: 3px 0 0 3px; }
+    .phone-btn-vol2 { position: absolute; left: -3px; top: 148px; width: 3px; height: 36px; background: rgba(255,255,255,0.18); border-radius: 3px 0 0 3px; }
+
+    /* Floating badges around phone */
+    .float-pill {
+      position: absolute; background: rgba(13,21,38,0.9);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 8px 14px; border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: white; white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    /* ANIMATIONS */
+    @keyframes phoneDance {
+      0%   { transform: translateY(0)    rotateY(-12deg) rotateZ(-1deg); }
+      25%  { transform: translateY(-12px) rotateY(-4deg)  rotateZ(0deg); }
+      50%  { transform: translateY(-20px) rotateY(12deg)  rotateZ(1deg); }
+      75%  { transform: translateY(-10px) rotateY(4deg)   rotateZ(0deg); }
+      100% { transform: translateY(0)    rotateY(-12deg) rotateZ(-1deg); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.08); }
+    }
+    @keyframes badgeFloat1 {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    @keyframes badgeFloat2 {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+    @keyframes badgeFloat3 {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+    @keyframes appPop {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes screenScan {
+      0%   { background-position: 0 -100%; }
+      100% { background-position: 0 300%; }
+    }
+
+    /* Particle dots background */
+    .hero-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .particle {
+      position: absolute; width: 2px; height: 2px;
+      background: rgba(0,122,255,0.5); border-radius: 50%;
+      animation: particleDrift linear infinite;
+    }
+    @keyframes particleDrift {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-20px) translateX(40px); opacity: 0; }
+    }
+
+    /* Scroll line on hero */
+    .scroll-hint { animation: scrollBounce 2s ease-in-out infinite; }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+
+    /* Step number glow */
+    .step-num { background: rgba(0,122,255,0.12); border: 1px solid rgba(0,122,255,0.25); transition: all 0.3s; }
+    .step-num:hover { background: rgba(0,122,255,0.25); border-color: rgba(0,122,255,0.5); transform: scale(1.1); }
+
+    /* Review card */
+    .review-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; transition: all 0.3s; }
+    .review-card:hover { border-color: rgba(0,122,255,0.3); box-shadow: 0 0 30px rgba(0,122,255,0.1); transform: translateY(-4px); }
+
+    /* Gradient text */
+    .gradient-text { background: linear-gradient(135deg, #007AFF, #00C2FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    /* ── PIXEL INTRO ── */
+    #intro-overlay {
+      position: fixed; inset: 0; z-index: 99999;
+      background: #000; overflow: hidden;
+    }
+    #intro-center {
+      position: absolute; inset: 0; z-index: 3;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .intro-logo-pixel {
+      display: grid; grid-template-columns: repeat(5, 10px); grid-template-rows: repeat(8, 10px); gap: 3px;
+      animation: logoAppear 0.5s ease forwards;
+    }
+    .lp { background: #007AFF; border-radius: 2px; }
+    .lp-off { background: transparent; }
+    @keyframes logoAppear {
+      from { opacity: 0; transform: scale(0.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    #intro-grid {
+      position: absolute; inset: -6px; z-index: 2;
+      display: grid; gap: 5px;
+    }
+    .i-cell {
+      background: #0a1020; border-radius: 3px;
+      transform: scale(0); opacity: 0;
+      animation: cellPop 0.22s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes cellPop {
+      from { transform: scale(0); opacity: 0; }
+      80%  { transform: scale(1.1); opacity: 1; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    #intro-notif {
+      position: absolute; top: 28px; left: 50%;
+      transform: translateX(-50%) translateY(-180%);
+      z-index: 10; min-width: 300px;
+      background: rgba(8,14,28,0.97);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-radius: 22px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(0,122,255,0.15);
+      transition: transform 0.65s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #intro-notif.in  { transform: translateX(-50%) translateY(0); }
+    #intro-notif.out { transform: translateX(-50%) translateY(-180%); transition: transform 0.4s cubic-bezier(0.55,0,1,0.45); }
+    .in-icon { width: 46px; height: 46px; background: #007AFF; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .in-app  { font-size: 11px; color: #60a5fa; font-weight: 700; letter-spacing: 0.8px; margin-bottom: 2px; }
+    .in-title{ font-size: 14px; font-weight: 700; color: white; }
+    .in-sub  { font-size: 12px; color: #8B95A8; margin-top: 2px; }
+    .in-time { font-size: 11px; color: #8B95A8; margin-left: auto; align-self: flex-start; padding-top: 2px; white-space: nowrap; }
+  </style>
+</head>
+<body x-data="{ mobileMenu: false }">
+
+  <!-- PIXEL INTRO OVERLAY -->
+  <div id="intro-overlay">
+    <!-- Small pixel logo in center before grid floods in -->
+    <div id="intro-center">
+      <div class="intro-logo-pixel">
+        <!-- Pixel art phone/Ei shape: 5 cols × 8 rows -->
+        <div class="lp"></div><div class="lp-off"></div><div class="lp"></div><div class="lp-off"></div><div class="lp"></div>
+        <div class="lp"></div><div class="lp-off"></div><div class="lp"></div><div class="lp-off"></div><div class="lp"></div>
+        <div class="lp"></div><div class="lp"></div><div class="lp"></div><div class="lp"></div><div class="lp"></div>
+        <div class="lp"></div><div class="lp-off"></div><div class="lp-off"></div><div class="lp-off"></div><div class="lp-off"></div>
+        <div class="lp"></div><div class="lp"></div><div class="lp"></div><div class="lp-off"></div><div class="lp-off"></div>
+        <div class="lp"></div><div class="lp-off"></div><div class="lp-off"></div><div class="lp-off"></div><div class="lp-off"></div>
+        <div class="lp"></div><div class="lp"></div><div class="lp"></div><div class="lp"></div><div class="lp"></div>
+        <div class="lp"></div><div class="lp-off"></div><div class="lp"></div><div class="lp-off"></div><div class="lp"></div>
+      </div>
+    </div>
+    <!-- Pixel grid floods from center -->
+    <div id="intro-grid"></div>
+    <!-- Notification over the grid -->
+    <div id="intro-notif">
+      <div class="in-icon">📱</div>
+      <div style="flex:1;min-width:0">
+        <div class="in-app">EAZY iPHONES</div>
+        <div class="in-title">Welcome 👋 We're glad to see you</div>
+        <div class="in-sub">UK's #1 Premium iPhone Marketplace</div>
+      </div>
+      <div class="in-time">now</div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 border-b" style="background:#07080F; border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <svg width="36" height="50" viewBox="0 0 36 50" fill="none"><rect x="0.5" y="0.5" width="35" height="49" rx="8" fill="#0A1020" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><rect x="11" y="4" width="14" height="5" rx="2.5" fill="#000"/><text x="1" y="44" font-family="Playfair Display, serif" font-size="34" font-weight="900" fill="white">E</text><circle cx="30" cy="18" r="3" fill="white"/><rect x="27.5" y="24" width="5" height="19" rx="2.5" fill="white"/></svg>
+          <div>
+            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:15px; letter-spacing:2px; color:white;">EAZY</div>
+            <div style="font-size:10px; letter-spacing:2px; color:#8B95A8; margin-top:-2px;">iPHONES</div>
+          </div>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="buy.html" class="muted hover:text-white transition-colors text-sm font-medium">Buy</a>
+          <a href="sell.html" class="muted hover:text-white transition-colors text-sm font-medium">Sell</a>
+          <a href="part-exchange.html" class="muted hover:text-white transition-colors text-sm font-medium">Part Exchange</a>
+          <a href="membership.html" class="muted hover:text-white transition-colors text-sm font-medium">Membership</a>
+          <a href="sell.html" class="btn-primary text-white px-5 py-2 rounded-full text-sm font-semibold">Get a Quote</a>
+        </div>
+        <button @click="mobileMenu = !mobileMenu" class="md:hidden text-white p-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div x-show="mobileMenu" x-transition class="md:hidden border-t px-4 py-4 space-y-3" style="border-color:rgba(255,255,255,0.06); background:#07080F">
+      <a href="buy.html" class="block muted text-sm py-2">Buy</a>
+      <a href="sell.html" class="block muted text-sm py-2">Sell</a>
+      <a href="part-exchange.html" class="block muted text-sm py-2">Part Exchange</a>
+      <a href="membership.html" class="block muted text-sm py-2">Membership</a>
+      <a href="sell.html" class="block btn-primary text-white px-5 py-2 rounded-full text-sm font-semibold text-center mt-2">Get a Quote</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden py-28 px-4" style="background: linear-gradient(180deg, #07080F 0%, #070C18 100%)">
+    <!-- Particle dots -->
+    <div class="hero-particles" id="particles"></div>
+    <!-- Large glow orb top right -->
+    <div style="position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(0,122,255,0.1),transparent 65%);top:-300px;right:-200px;pointer-events:none;"></div>
+    <!-- Large glow orb bottom left -->
+    <div style="position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,122,255,0.07),transparent 65%);bottom:-200px;left:-150px;pointer-events:none;"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+
+        <!-- LEFT: Copy -->
+        <div data-aos="fade-right" data-aos-duration="900">
+          <span class="badge text-xs font-semibold px-3 py-1.5 rounded-full inline-block mb-6">UK's #1 iPhone Reseller</span>
+          <h1 class="text-5xl md:text-6xl font-black leading-tight mb-6">
+            Buy &amp; Sell iPhones<br>
+            <span class="gradient-text">With Confidence.</span>
+          </h1>
+          <p class="muted text-lg mb-8 max-w-lg leading-relaxed">Premium grade iPhones. Fully tested. Competitively priced. Every device verified by our expert team before it reaches you.</p>
+          <div class="flex flex-col sm:flex-row gap-4 mb-10">
+            <a href="buy.html" class="btn-primary text-white px-8 py-4 rounded-full text-base font-semibold text-center">Browse Phones</a>
+            <a href="sell.html" class="btn-outline px-8 py-4 rounded-full text-base font-semibold text-center">Sell Your iPhone</a>
+          </div>
+          <!-- Trust row -->
+          <div class="flex items-center gap-6 text-sm muted">
+            <div class="flex items-center gap-2"><span class="green font-bold">✓</span> 48hr dispatch</div>
+            <div class="flex items-center gap-2"><span class="green font-bold">✓</span> Fully tested</div>
+            <div class="flex items-center gap-2"><span class="green font-bold">✓</span> 4.9★ rated</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: 3D Phone -->
+        <div class="hidden md:flex justify-center" data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
+          <div class="phone-scene">
+            <!-- Glow background -->
+            <div class="phone-glow-bg"></div>
+
+            <!-- Floating badge: Battery -->
+            <div class="float-pill" style="top:12%;left:0;animation:badgeFloat1 4s ease-in-out infinite;">
+              <span style="color:#30D158;margin-right:5px;">⚡</span>100% Battery
+            </div>
+            <!-- Floating badge: Rating -->
+            <div class="float-pill" style="top:46%;left:0;animation:badgeFloat3 3.5s ease-in-out infinite 0.6s;">
+              ⭐ 4.9 Rated
+            </div>
+            <!-- Floating badge: Unlocked -->
+            <div class="float-pill" style="bottom:22%;right:0;animation:badgeFloat2 4.5s ease-in-out infinite 0.3s;">
+              🔓 Unlocked
+            </div>
+            <!-- Floating badge: UK delivery -->
+            <div class="float-pill" style="bottom:10%;left:10%;animation:badgeFloat1 3.8s ease-in-out infinite 1s;">
+              🚚 UK Delivery
+            </div>
+
+            <!-- Phone body -->
+            <div class="phone-body">
+              <div class="phone-island"></div>
+              <div class="phone-screen">
+                <div class="screen-shine"></div>
+                <div class="screen-content">
+                  <div class="screen-time" id="phoneTime">9:41</div>
+                  <div class="screen-grid">
+                    <div class="app-tile" style="background:linear-gradient(135deg,#007AFF,#0055d4);animation-delay:0.1s;">📞</div>
+                    <div class="app-tile" style="background:linear-gradient(135deg,#34C759,#248A3D);animation-delay:0.2s;">💬</div>
+                    <div class="app-tile" style="background:linear-gradient(135deg,#FF9500,#C93400);animation-delay:0.3s;">📷</div>
+                    <div class="app-tile" style="background:linear-gradient(135deg,#AF52DE,#6E34C0);animation-delay:0.4s;">🎵</div>
+                  </div>
+                  <div class="screen-listing">
+                    <div class="listing-model">iPhone 15 Pro Max · 256GB</div>
+                    <div class="listing-price">£1,099</div>
+                    <div class="listing-chip">In Stock</div>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-btn-right"></div>
+              <div class="phone-btn-vol1"></div>
+              <div class="phone-btn-vol2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll hint -->
+      <div class="text-center mt-16 scroll-hint hidden md:block">
+        <div class="muted text-xs mb-2">Scroll to explore</div>
+        <svg class="mx-auto" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#8B95A8"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="py-10 px-4 section-alt">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="stat-card p-6 text-center" data-aos="fade-up" data-aos-delay="0"><div class="text-3xl font-black">250+</div><div class="muted text-sm mt-1">Phones Sold</div></div>
+        <div class="stat-card p-6 text-center" data-aos="fade-up" data-aos-delay="80"><div class="text-3xl font-black">4.9★</div><div class="muted text-sm mt-1">Average Rating</div></div>
+        <div class="stat-card p-6 text-center" data-aos="fade-up" data-aos-delay="160"><div class="text-3xl font-black">30+</div><div class="muted text-sm mt-1">Exclusive Members</div></div>
+        <div class="stat-card p-6 text-center" data-aos="fade-up" data-aos-delay="240"><div class="text-3xl font-black">48hr</div><div class="muted text-sm mt-1">Dispatch</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PHONES -->
+  <section class="py-20 px-4 section-dark">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-12" data-aos="fade-up">
+        <div>
+          <h2 class="text-3xl font-black">Available Now</h2>
+          <p class="muted mt-1">Handpicked, tested, and ready to ship.</p>
+        </div>
+        <a href="buy.html" class="btn-outline px-6 py-2.5 rounded-full text-sm font-semibold hidden md:block">View All →</a>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="card p-0 overflow-hidden" data-aos="fade-up" data-aos-delay="0">
+          <div class="phone-img h-52">📱</div>
+          <div class="p-6">
+            <div class="flex items-start justify-between mb-3">
+              <h3 class="font-bold text-lg">iPhone 15 Pro Max</h3>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background:rgba(48,209,88,0.15);color:#30D158">Excellent</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Storage</div><div class="font-semibold text-sm">256GB</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Battery</div><div class="font-semibold text-sm green">100%</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Network</div><div class="font-semibold text-sm">Unlocked</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Colour</div><div class="font-semibold text-sm">Black</div></div>
+            </div>
+            <div class="text-2xl font-black mb-4">£1,099</div>
+            <div class="flex flex-col gap-2">
+              <a href="buy.html" class="btn-primary text-white py-2.5 rounded-xl text-sm font-semibold text-center">Buy Now</a>
+              <a href="part-exchange.html" class="btn-outline py-2.5 rounded-xl text-sm font-semibold text-center">Part Exchange</a>
+            </div>
+          </div>
+        </div>
+        <div class="card p-0 overflow-hidden" data-aos="fade-up" data-aos-delay="120">
+          <div class="phone-img h-52">📱</div>
+          <div class="p-6">
+            <div class="flex items-start justify-between mb-3">
+              <h3 class="font-bold text-lg">iPhone 14 Pro</h3>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background:rgba(48,209,88,0.15);color:#30D158">Excellent</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Storage</div><div class="font-semibold text-sm">128GB</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Battery</div><div class="font-semibold text-sm green">97%</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Network</div><div class="font-semibold text-sm">Unlocked</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Colour</div><div class="font-semibold text-sm">Silver</div></div>
+            </div>
+            <div class="text-2xl font-black mb-4">£699</div>
+            <div class="flex flex-col gap-2">
+              <a href="buy.html" class="btn-primary text-white py-2.5 rounded-xl text-sm font-semibold text-center">Buy Now</a>
+              <a href="part-exchange.html" class="btn-outline py-2.5 rounded-xl text-sm font-semibold text-center">Part Exchange</a>
+            </div>
+          </div>
+        </div>
+        <div class="card p-0 overflow-hidden" data-aos="fade-up" data-aos-delay="240">
+          <div class="phone-img h-52">📱</div>
+          <div class="p-6">
+            <div class="flex items-start justify-between mb-3">
+              <h3 class="font-bold text-lg">iPhone 13 Pro</h3>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background:rgba(255,196,0,0.15);color:#F5A623">Good</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Storage</div><div class="font-semibold text-sm">256GB</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Battery</div><div class="font-semibold text-sm green">92%</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Network</div><div class="font-semibold text-sm">Unlocked</div></div>
+              <div class="rounded-xl p-2 text-center" style="background:rgba(255,255,255,0.05)"><div class="text-xs muted">Colour</div><div class="font-semibold text-sm">Sierra Blue</div></div>
+            </div>
+            <div class="text-2xl font-black mb-4">£549</div>
+            <div class="flex flex-col gap-2">
+              <a href="buy.html" class="btn-primary text-white py-2.5 rounded-xl text-sm font-semibold text-center">Buy Now</a>
+              <a href="part-exchange.html" class="btn-outline py-2.5 rounded-xl text-sm font-semibold text-center">Part Exchange</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-8 md:hidden">
+        <a href="buy.html" class="btn-outline px-8 py-3 rounded-full text-sm font-semibold inline-block">View All Phones →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="py-20 px-4 section-alt">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-14" data-aos="fade-up">
+        <h2 class="text-3xl font-black">How It Works</h2>
+        <p class="muted mt-2">Simple, safe, and straightforward.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center p-6" data-aos="fade-up" data-aos-delay="0">
+          <div class="step-num w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">🔍</div>
+          <div class="text-sm font-bold mb-2" style="color:#60a5fa">Step 01</div>
+          <h3 class="font-bold text-lg mb-2">Browse &amp; Choose</h3>
+          <p class="muted text-sm">Filter by model, storage, battery health and price. Every listing includes full specs and condition report.</p>
+        </div>
+        <div class="text-center p-6" data-aos="fade-up" data-aos-delay="120">
+          <div class="step-num w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">💳</div>
+          <div class="text-sm font-bold mb-2" style="color:#60a5fa">Step 02</div>
+          <h3 class="font-bold text-lg mb-2">Purchase Securely</h3>
+          <p class="muted text-sm">Buy outright, part exchange your current device, or place a deposit to secure your chosen phone.</p>
+        </div>
+        <div class="text-center p-6" data-aos="fade-up" data-aos-delay="240">
+          <div class="step-num w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📦</div>
+          <div class="text-sm font-bold mb-2" style="color:#60a5fa">Step 03</div>
+          <h3 class="font-bold text-lg mb-2">Fast Delivery</h3>
+          <p class="muted text-sm">Dispatched within 48 hours. Every phone fully tested, cleaned, and packaged with care.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMBERSHIP TEASER -->
+  <section class="py-20 px-4 section-dark">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div data-aos="fade-right">
+          <span class="badge text-xs font-semibold px-3 py-1.5 rounded-full inline-block mb-6">Eazy iPhones Membership</span>
+          <h2 class="text-4xl font-black mb-4">Turn iPhone Flipping Into a Business</h2>
+          <p class="muted mb-6 leading-relaxed">Join our exclusive membership programme. Learn exactly how to buy and sell iPhones for profit — with direct mentorship, a private community, and a proven system.</p>
+          <div class="space-y-3 mb-8">
+            <div class="flex items-center gap-3 muted" data-aos="fade-left" data-aos-delay="0"><span class="green text-lg">✓</span><span>Step-by-step iPhone flipping system</span></div>
+            <div class="flex items-center gap-3 muted" data-aos="fade-left" data-aos-delay="80"><span class="green text-lg">✓</span><span>1:1 onboarding call with Ethan</span></div>
+            <div class="flex items-center gap-3 muted" data-aos="fade-left" data-aos-delay="160"><span class="green text-lg">✓</span><span>Private members group &amp; ongoing support</span></div>
+            <div class="flex items-center gap-3 muted" data-aos="fade-left" data-aos-delay="240"><span class="green text-lg">✓</span><span>Live weekly revenue tracker</span></div>
+          </div>
+          <a href="membership.html" class="btn-primary text-white px-8 py-4 rounded-full text-base font-semibold inline-block">Apply Now →</a>
+        </div>
+        <div class="card p-8" data-aos="fade-left" data-aos-delay="100">
+          <div class="text-center mb-6">
+            <div class="muted text-sm font-medium mb-2">This Week's Member Revenue</div>
+            <div class="text-5xl font-black" id="revenueCounter">£0</div>
+          </div>
+          <div class="h-px mb-6" style="background:rgba(255,255,255,0.08)"></div>
+          <div class="text-center">
+            <div class="muted text-sm font-medium mb-2">This Week's Net Profit</div>
+            <div class="text-4xl font-black green" id="profitCounter">£0</div>
+          </div>
+          <p class="muted text-xs text-center mt-6">Live figures updated weekly. Join to see the full breakdown.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="py-20 px-4 section-alt">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-14" data-aos="fade-up"><h2 class="text-3xl font-black">What Our Customers Say</h2></div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="review-card p-6" data-aos="fade-up" data-aos-delay="0"><div class="flex mb-3">⭐⭐⭐⭐⭐</div><p class="muted text-sm mb-4">"Bought an iPhone 15 Pro Max — arrived next day, perfect condition, exactly as described. Will definitely use again."</p><div class="font-semibold text-sm">James T. — London</div></div>
+        <div class="review-card p-6" data-aos="fade-up" data-aos-delay="120"><div class="flex mb-3">⭐⭐⭐⭐⭐</div><p class="muted text-sm mb-4">"Sold my old iPhone 13 and got a great price. Process was easy, payment was fast. Couldn't ask for more."</p><div class="font-semibold text-sm">Sarah M. — Manchester</div></div>
+        <div class="review-card p-6" data-aos="fade-up" data-aos-delay="240"><div class="flex mb-3">⭐⭐⭐⭐⭐</div><p class="muted text-sm mb-4">"Joined the membership 3 months ago — made back my investment in the first week. The system actually works."</p><div class="font-semibold text-sm">Ryan K. — Birmingham</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-14 px-4 border-t" style="background:#07080F; border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8 mb-10">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <svg width="28" height="39" viewBox="0 0 36 50" fill="none"><rect x="0.5" y="0.5" width="35" height="49" rx="8" fill="#0A1020" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><rect x="11" y="4" width="14" height="5" rx="2.5" fill="#000"/><text x="1" y="44" font-family="Playfair Display, serif" font-size="34" font-weight="900" fill="white">E</text><circle cx="30" cy="18" r="3" fill="white"/><rect x="27.5" y="24" width="5" height="19" rx="2.5" fill="white"/></svg>
+            <div><div style="font-family:'Playfair Display',serif; font-weight:700; font-size:13px; letter-spacing:2px;">EAZY</div><div style="font-size:9px; letter-spacing:2px; color:#8B95A8;">iPHONES</div></div>
+          </div>
+          <p class="muted text-sm">UK's premium iPhone marketplace. Buy, sell, and trade with confidence.</p>
+        </div>
+        <div><div class="font-semibold mb-4 text-sm">Buy &amp; Sell</div><ul class="space-y-2 text-sm muted"><li><a href="buy.html" class="hover:text-white transition-colors">Buy iPhones</a></li><li><a href="sell.html" class="hover:text-white transition-colors">Sell Your iPhone</a></li><li><a href="part-exchange.html" class="hover:text-white transition-colors">Part Exchange</a></li></ul></div>
+        <div><div class="font-semibold mb-4 text-sm">Membership</div><ul class="space-y-2 text-sm muted"><li><a href="membership.html" class="hover:text-white transition-colors">About Membership</a></li><li><a href="membership.html" class="hover:text-white transition-colors">Apply Now</a></li><li><a href="membership.html" class="hover:text-white transition-colors">FAQ</a></li></ul></div>
+        <div><div class="font-semibold mb-4 text-sm">Contact</div><ul class="space-y-2 text-sm muted"><li>📧 info@eazyiphones.co.uk</li><li>📱 @eazyiphones</li></ul></div>
+      </div>
+      <div class="border-t pt-6 text-center text-xs muted" style="border-color:rgba(255,255,255,0.06)">© 2026 Eazy iPhones. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 750, once: true, easing: 'ease-out-cubic' });
+
+    /* ── PIXEL INTRO ENGINE ── */
+    (function() {
+      const overlay = document.getElementById('intro-overlay');
+      const grid    = document.getElementById('intro-grid');
+      const notif   = document.getElementById('intro-notif');
+      const center  = document.getElementById('intro-center');
+      if (!overlay) return;
+
+      const CW = 22, CH = 44, GAP = 5;
+      const cols = Math.ceil((window.innerWidth  + GAP) / (CW + GAP)) + 1;
+      const rows = Math.ceil((window.innerHeight + GAP) / (CH + GAP)) + 1;
+
+      grid.style.gridTemplateColumns = `repeat(${cols}, ${CW}px)`;
+      grid.style.gridAutoRows = `${CH}px`;
+
+      const cx = (cols - 1) / 2;
+      const cy = (rows - 1) / 2;
+      const maxDist = Math.sqrt(cx * cx + cy * cy);
+      const cells = [];
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'i-cell';
+          const dist = Math.sqrt((c - cx) ** 2 + (r - cy) ** 2);
+          /* stagger: nearest cells pop first, outer cells last — max 1100ms spread */
+          cell.style.animationDelay = ((dist / maxDist) * 1100) + 'ms';
+          const angle = Math.atan2(r - cy, c - cx);
+          const speed = 60 + Math.random() * 80;
+          cell._tx = Math.cos(angle) * speed;
+          cell._ty = Math.sin(angle) * speed;
+          grid.appendChild(cell);
+          cells.push(cell);
+        }
+      }
+
+      /* Hide center logo once grid covers it */
+      setTimeout(() => { center.style.opacity = '0'; center.style.transition = 'opacity 0.3s'; }, 600);
+
+      /* Slide notification in after grid is fully covered */
+      setTimeout(() => notif.classList.add('in'), 1800);
+
+      /* Shatter pixels outward + slide notification out */
+      setTimeout(() => {
+        notif.classList.remove('in');
+        notif.classList.add('out');
+        cells.forEach(cell => {
+          const d = Math.random() * 500;
+          setTimeout(() => {
+            cell.style.transition = 'transform 0.45s ease-in, opacity 0.35s ease-in';
+            cell.style.transform  = `translate(${cell._tx}px,${cell._ty}px) scale(0)`;
+            cell.style.opacity    = '0';
+          }, d);
+        });
+      }, 4000);
+
+      /* Remove overlay entirely */
+      setTimeout(() => {
+        overlay.style.transition = 'opacity 0.4s';
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        setTimeout(() => overlay.remove(), 450);
+      }, 4900);
+    })();
+
+    /* Live clock on phone screen */
+    function updatePhoneClock() {
+      const el = document.getElementById('phoneTime');
+      if (!el) return;
+      const now = new Date();
+      const h = now.getHours().toString().padStart(2,'0');
+      const m = now.getMinutes().toString().padStart(2,'0');
+      el.textContent = h + ':' + m;
+    }
+    updatePhoneClock();
+    setInterval(updatePhoneClock, 10000);
+
+    /* Revenue/profit counter — trigger when scrolled into view */
+    function animateCounter(id, target, prefix, duration) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const increment = target / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) { current = target; clearInterval(timer); }
+        el.textContent = prefix + Math.floor(current).toLocaleString();
+      }, 16);
+    }
+    const counterSection = document.getElementById('revenueCounter');
+    let countersRan = false;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !countersRan) {
+        countersRan = true;
+        animateCounter('revenueCounter', 8400, '£', 2000);
+        animateCounter('profitCounter', 3200, '£', 2000);
+      }
+    }, { threshold: 0.4 });
+    if (counterSection) observer.observe(counterSection);
+
+    /* Floating particles */
+    const container = document.getElementById('particles');
+    if (container) {
+      for (let i = 0; i < 28; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.cssText = `
+          left: ${Math.random()*100}%;
+          width: ${Math.random()*2+1}px;
+          height: ${Math.random()*2+1}px;
+          animation-duration: ${Math.random()*12+8}s;
+          animation-delay: ${Math.random()*10}s;
+          opacity: ${Math.random()*0.5+0.2};
+        `;
+        container.appendChild(p);
+      }
+    }
+  </script>
+</body>
+</html>
