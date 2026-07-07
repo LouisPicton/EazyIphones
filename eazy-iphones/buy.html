@@ -142,7 +142,14 @@
               <div class="absolute top-3 left-3 z-10 text-xs font-bold px-2 py-0.5 rounded-full" style="background:#FFD60A;color:#000">★ Featured</div>
             </div>
 
-            <div class="phone-img h-44">📱</div>
+            <div class="phone-img h-44" :style="p.image_url ? 'background:none;padding:0' : ''">
+              <template x-if="p.image_url">
+                <img :src="p.image_url" style="width:100%;height:176px;object-fit:cover;border-radius:16px 16px 0 0;">
+              </template>
+              <template x-if="!p.image_url">
+                <span>📱</span>
+              </template>
+            </div>
             <div class="p-5">
               <div class="flex items-start justify-between mb-2">
                 <h3 class="font-bold text-base" x-text="p.model"></h3>

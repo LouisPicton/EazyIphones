@@ -251,6 +251,15 @@
               <textarea x-model="form.description" class="form-input" rows="3" placeholder="Any extra details — accessories included, minor marks, etc."></textarea>
             </div>
 
+            <div>
+              <label class="form-label">PHONE IMAGE</label>
+              <div x-show="form.image_url" class="mb-2">
+                <img :src="form.image_url" style="height:80px;border-radius:10px;object-fit:cover;">
+              </div>
+              <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]" class="form-input" style="padding:8px;">
+              <div class="text-xs muted mt-1">JPG or PNG recommended. Max 5MB.</div>
+            </div>
+
             <label class="flex items-center gap-3 cursor-pointer pt-1">
               <input type="checkbox" x-model="form.featured" class="w-4 h-4 rounded" style="accent-color:#007AFF">
               <div>
@@ -286,7 +295,8 @@
         pw: '', pwError: false,
         phones: [], loading: false, saving: false,
         showAdd: false, editTarget: null,
-        form: { model:'', storage:'128GB', price:'', battery:'', condition:'Excellent', network:'Unlocked', colour:'', description:'', featured: false },
+        form: { model:'', storage:'128GB', price:'', battery:'', condition:'Excellent', network:'Unlocked', colour:'', description:'', featured: false, image_url:'' },
+        imageFile: null, uploadingImage: false,
 
         async init() {
           if (this.loggedIn) await this.load()
@@ -321,7 +331,8 @@
         },
 
         resetForm() {
-          this.form = { model:'', storage:'128GB', price:'', battery:'', condition:'Excellent', network:'Unlocked', colour:'', description:'', featured: false }
+          this.form = { model:'', storage:'128GB', price:'', battery:'', condition:'Excellent', network:'Unlocked', colour:'', description:'', featured: false, image_url:'' }
+          this.imageFile = null
         },
 
         openAdd() {
@@ -340,8 +351,10 @@
             network: p.network || 'Unlocked',
             colour: p.colour || '',
             description: p.description || '',
-            featured: !!p.featured
+            featured: !!p.featured,
+            image_url: p.image_url || ''
           }
+          this.imageFile = null
           this.editTarget = p
           this.showAdd = true
         },
@@ -352,6 +365,19 @@
             return
           }
           this.saving = true
+
+          let image_url = this.form.image_url || null
+          if (this.imageFile) {
+            const ext = this.imageFile.name.split('.').pop()
+            const path = `${Date.now()}.${ext}`
+            const { data: upData, error: upErr } = await sb.storage
+              .from('phone-images')
+              .upload(path, this.imageFile, { upsert: true })
+            if (upErr) { alert('Image upload failed: ' + upErr.message); this.saving = false; return }
+            const { data: urlData } = sb.storage.from('phone-images').getPublicUrl(path)
+            image_url = urlData.publicUrl
+          }
+
           const payload = {
             model: this.form.model.trim(),
             storage: this.form.storage,
@@ -361,7 +387,8 @@
             network: this.form.network,
             colour: this.form.colour.trim(),
             description: this.form.description.trim(),
-            featured: !!this.form.featured
+            featured: !!this.form.featured,
+            image_url
           }
           let error
           if (this.editTarget) {
