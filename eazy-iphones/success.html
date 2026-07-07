@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — Eazy iPhones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #07080F; color: white; min-height: 100vh; }
+    h1,h2,h3 { font-family: 'Playfair Display', serif; }
+    .btn-primary { background: #007AFF; transition: background 0.2s; }
+    .btn-primary:hover { background: #0055d4; }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; }
+    .muted { color: #8B95A8; }
+    .check-ring { width: 80px; height: 80px; border-radius: 50%; background: rgba(48,209,88,0.12); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    @keyframes pop { 0%{transform:scale(0.5);opacity:0} 70%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+    .check-ring { animation: pop 0.5s ease-out forwards; }
+  </style>
+</head>
+<body x-data="successApp()" x-init="init()">
+
+  <!-- NAV -->
+  <nav class="border-b" style="background:#07080F;border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center">
+      <a href="index.html" class="flex items-center gap-3">
+        <svg width="30" height="42" viewBox="0 0 36 50" fill="none"><rect x="0.5" y="0.5" width="35" height="49" rx="8" fill="#0A1020" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><rect x="11" y="4" width="14" height="5" rx="2.5" fill="#000"/><text x="1" y="44" font-family="Playfair Display, serif" font-size="34" font-weight="900" fill="white">E</text><circle cx="30" cy="18" r="3" fill="white"/><rect x="27.5" y="24" width="5" height="19" rx="2.5" fill="white"/></svg>
+        <div><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:15px;letter-spacing:2px;">EAZY</div><div style="font-size:10px;letter-spacing:2px;color:#8B95A8;margin-top:-2px;">iPHONES</div></div>
+      </a>
+    </div>
+  </nav>
+
+  <!-- LOADING -->
+  <div x-show="loading" class="flex items-center justify-center min-h-96">
+    <div class="text-center muted">
+      <div class="text-3xl mb-3 animate-pulse">⏳</div>
+      <div class="text-sm">Confirming your order...</div>
+    </div>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div x-show="!loading && error" class="max-w-lg mx-auto px-4 py-20 text-center">
+    <div class="text-4xl mb-4">❌</div>
+    <h2 class="text-xl font-black mb-2">Something went wrong</h2>
+    <p class="muted text-sm mb-6" x-text="error"></p>
+    <a href="buy.html" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm inline-block">Back to Shop</a>
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div x-show="!loading && !error && order" class="max-w-lg mx-auto px-4 py-16">
+
+    <div class="text-center mb-8">
+      <div class="check-ring">
+        <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+          <path d="M5 13l4 4L19 7" stroke="#30D158" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-black mb-2">Order Confirmed!</h1>
+      <p class="muted">Payment received. Ethan will be in touch within 24 hours.</p>
+    </div>
+
+    <!-- ORDER CARD -->
+    <div class="card p-6 mb-5">
+      <div class="flex items-center justify-between mb-4 pb-4" style="border-bottom:1px solid rgba(255,255,255,0.06)">
+        <div>
+          <div class="text-xs muted mb-0.5 font-semibold" style="letter-spacing:0.5px;">ORDER NUMBER</div>
+          <div class="text-lg font-black" x-text="order.orderNumber"></div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs muted mb-0.5 font-semibold" style="letter-spacing:0.5px;">TOTAL PAID</div>
+          <div class="text-lg font-black" x-text="`£${order.amount}`"></div>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <div class="flex items-center gap-3">
+          <div class="text-2xl">📱</div>
+          <div>
+            <div class="font-semibold text-sm" x-text="order.phone"></div>
+            <div class="text-xs muted">Dispatched within 48 hours</div>
+          </div>
+        </div>
+        <div x-show="order.customerName" class="flex items-center gap-3">
+          <div class="text-2xl">👤</div>
+          <div>
+            <div class="font-semibold text-sm" x-text="order.customerName"></div>
+            <div class="text-xs muted" x-text="order.customerEmail"></div>
+          </div>
+        </div>
+        <div x-show="order.shipping" class="flex items-start gap-3">
+          <div class="text-2xl">📦</div>
+          <div>
+            <div class="text-xs muted">Shipping to</div>
+            <div class="text-sm" x-html="formatAddress(order.shipping)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT HAPPENS NEXT -->
+    <div class="card p-6 mb-6">
+      <h3 class="font-black mb-4 text-sm" style="letter-spacing:0.5px;">WHAT HAPPENS NEXT</h3>
+      <div class="space-y-3">
+        <div class="flex gap-3">
+          <div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold" style="background:rgba(0,122,255,0.2);color:#60a5fa">1</div>
+          <div class="text-sm">You'll receive a payment confirmation email from Stripe</div>
+        </div>
+        <div class="flex gap-3">
+          <div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold" style="background:rgba(0,122,255,0.2);color:#60a5fa">2</div>
+          <div class="text-sm">Ethan will contact you within 24 hours to confirm dispatch</div>
+        </div>
+        <div class="flex gap-3">
+          <div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold" style="background:rgba(0,122,255,0.2);color:#60a5fa">3</div>
+          <div class="text-sm">Your iPhone ships within 48 hours via tracked delivery</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn-primary text-white w-full py-3.5 rounded-xl font-bold text-sm text-center block">Back to Eazy iPhones</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="py-8 px-4 border-t mt-16" style="background:#07080F;border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="text-xs" style="color:#4B5563">© 2026 Eazy iPhones. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    function successApp() {
+      return {
+        loading: true,
+        error: null,
+        order: null,
+
+        async init() {
+          const params = new URLSearchParams(window.location.search)
+          const sessionId = params.get('session_id')
+
+          if (!sessionId) {
+            this.error = 'No order session found. If you completed a purchase, check your email for confirmation.'
+            this.loading = false
+            return
+          }
+
+          try {
+            const res = await fetch(`/api/verify-payment?session_id=${sessionId}`)
+            const data = await res.json()
+            if (!res.ok) throw new Error(data.error || 'Failed to load order')
+            this.order = data
+          } catch (err) {
+            this.error = err.message
+          }
+          this.loading = false
+        },
+
+        formatAddress(addr) {
+          if (!addr) return ''
+          return [addr.line1, addr.line2, addr.city, addr.postal_code]
+            .filter(Boolean).join(', ')
+        }
+      }
+    }
+  </script>
+</body>
+</html>
