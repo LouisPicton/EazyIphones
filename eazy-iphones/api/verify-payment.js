@@ -26,6 +26,18 @@ module.exports = async function handler(req, res) {
 
   const orderNumber = 'EI-' + session.id.replace('cs_live_', '').replace('cs_test_', '').substring(0, 8).toUpperCase()
 
+  // Save order to Supabase (upsert prevents duplicates if page is refreshed)
+  await sb.from('orders').upsert({
+    order_number: orderNumber,
+    phone_name: session.metadata?.phone_name || 'iPhone',
+    amount: (session.amount_total / 100),
+    customer_name: session.customer_details?.name || '',
+    customer_email: session.customer_details?.email || '',
+    shipping_address: session.shipping_details?.address || null,
+    stripe_session_id: session.id,
+    fulfilled: false,
+  }, { onConflict: 'stripe_session_id' })
+
   return res.json({
     orderNumber,
     customerName: session.customer_details?.name || '',
