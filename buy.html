@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy iPhones — Eazy iPhones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #070C18; color: white; }
+    h1,h2,h3 { font-family: 'Playfair Display', serif; }
+    .btn-primary { background: #007AFF; transition: background 0.2s; }
+    .btn-primary:hover { background: #0055d4; }
+    .btn-outline { border: 1.5px solid rgba(255,255,255,0.25); color: white; transition: all 0.2s; }
+    .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; transition: border-color 0.2s, transform 0.2s; }
+    .card:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-3px); }
+    .phone-img { background: linear-gradient(135deg, #111827, #0D1526); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+    .muted { color: #8B95A8; }
+    .green { color: #30D158; }
+    .filter-bar { background: #0D1526; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .filter-select { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 50px; padding: 8px 16px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+    .filter-select:focus { border-color: #007AFF; }
+    .filter-select option { background: #0D1526; }
+    .sold-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; }
+    .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 20px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  </style>
+</head>
+<body x-data="buyApp()" x-init="init()">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 border-b" style="background:#07080F; border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <img src="logo.png" alt="Eazy iPhones" style="height:44px;">
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="buy.html" class="text-white text-sm font-semibold">Buy</a>
+          <a href="sell.html" class="muted hover:text-white text-sm">Sell</a>
+          <a href="part-exchange.html" class="muted hover:text-white text-sm">Part Exchange</a>
+          <a href="membership.html" class="muted hover:text-white text-sm">Membership</a>
+          <a href="sell.html" class="btn-primary text-white px-5 py-2 rounded-full text-sm font-semibold">Get a Quote</a>
+        </div>
+        <button @click="mobileMenu = !mobileMenu" class="md:hidden text-white p-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div x-show="mobileMenu" x-transition class="md:hidden border-t px-4 py-4 space-y-3" style="border-color:rgba(255,255,255,0.06);background:#07080F">
+      <a href="buy.html" class="block text-white text-sm font-semibold py-2">Buy</a>
+      <a href="sell.html" class="block muted text-sm py-2">Sell</a>
+      <a href="part-exchange.html" class="block muted text-sm py-2">Part Exchange</a>
+      <a href="membership.html" class="block muted text-sm py-2">Membership</a>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="py-14 px-4" style="background:linear-gradient(180deg,#07080F,#070C18)">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-4xl font-black mb-2">Available iPhones</h1>
+      <p class="muted">Every device tested, verified, and ready to ship within 48 hours.</p>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section class="filter-bar py-4 px-4 sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto flex flex-wrap gap-3 items-center">
+      <select x-model="filterSeries" class="filter-select">
+        <option value="">All Models</option>
+        <option value="15">iPhone 15 Series</option>
+        <option value="14">iPhone 14 Series</option>
+        <option value="13">iPhone 13 Series</option>
+        <option value="12">iPhone 12 Series</option>
+      </select>
+      <select x-model="filterStorage" class="filter-select">
+        <option value="">All Storage</option>
+        <option>64GB</option>
+        <option>128GB</option>
+        <option>256GB</option>
+        <option>512GB</option>
+        <option>1TB</option>
+      </select>
+      <select x-model="filterCondition" class="filter-select">
+        <option value="">All Conditions</option>
+        <option>Excellent</option>
+        <option>Good</option>
+        <option>Fair</option>
+      </select>
+      <select x-model="sortBy" class="filter-select">
+        <option value="featured">Featured First</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="battery">Battery: Best First</option>
+      </select>
+      <div class="ml-auto muted text-sm font-medium">
+        <span x-show="loading">Loading...</span>
+        <span x-show="!loading" x-text="`${filteredPhones.length} phone${filteredPhones.length !== 1 ? 's' : ''} available`"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHONE GRID -->
+  <section class="py-12 px-4" style="background:#070C18">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- LOADING SKELETONS -->
+      <div x-show="loading" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <template x-for="i in [1,2,3,4,5,6,7,8]">
+          <div class="skeleton h-80"></div>
+        </template>
+      </div>
+
+      <!-- EMPTY STATE (no stock) -->
+      <div x-show="!loading && availablePhones.length === 0" class="text-center py-24">
+        <div class="text-5xl mb-4">📱</div>
+        <div class="font-bold text-lg mb-2">No phones available right now</div>
+        <div class="muted text-sm mb-6">We restock regularly — check back soon or get notified.</div>
+        <a href="sell.html" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm inline-block">Submit an Enquiry</a>
+      </div>
+
+      <!-- FILTERED EMPTY STATE -->
+      <div x-show="!loading && availablePhones.length > 0 && filteredPhones.length === 0" class="text-center py-24">
+        <div class="text-4xl mb-4">🔍</div>
+        <div class="font-bold mb-2">No phones match your filters</div>
+        <div class="muted text-sm mb-4">Try adjusting the filters above.</div>
+        <button @click="clearFilters()" class="btn-outline px-5 py-2.5 rounded-xl text-sm font-semibold">Clear Filters</button>
+      </div>
+
+      <!-- PHONE CARDS -->
+      <div x-show="!loading && filteredPhones.length > 0" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <template x-for="p in filteredPhones" :key="p.id">
+          <div class="card overflow-hidden" data-aos="fade-up">
+
+            <!-- FEATURED BADGE -->
+            <div x-show="p.featured" class="relative">
+              <div class="absolute top-3 left-3 z-10 text-xs font-bold px-2 py-0.5 rounded-full" style="background:#FFD60A;color:#000">★ Featured</div>
+            </div>
+
+            <div class="phone-img h-44" :style="p.image_url ? 'background:none;padding:0' : ''">
+              <template x-if="p.image_url">
+                <img :src="p.image_url" style="width:100%;height:176px;object-fit:cover;border-radius:16px 16px 0 0;">
+              </template>
+              <template x-if="!p.image_url">
+                <span>📱</span>
+              </template>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-2">
+                <h3 class="font-bold text-base" x-text="p.model"></h3>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ml-2"
+                  :style="`background:${condColor(p.condition).bg};color:${condColor(p.condition).fg}`"
+                  x-text="p.condition || 'Good'">
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-1.5 mb-3">
+                <div class="rounded-lg p-2 text-center" style="background:rgba(255,255,255,0.05)">
+                  <div class="text-xs muted">Storage</div>
+                  <div class="font-semibold text-xs" x-text="p.storage || '—'"></div>
+                </div>
+                <div class="rounded-lg p-2 text-center" style="background:rgba(255,255,255,0.05)">
+                  <div class="text-xs muted">Battery</div>
+                  <div class="font-semibold text-xs" :style="`color:${batteryColor(p.battery)}`" x-text="`${p.battery}%`"></div>
+                </div>
+                <div class="rounded-lg p-2 text-center" style="background:rgba(255,255,255,0.05)">
+                  <div class="text-xs muted">Network</div>
+                  <div class="font-semibold text-xs" x-text="p.network || 'Unlocked'"></div>
+                </div>
+                <div class="rounded-lg p-2 text-center" style="background:rgba(255,255,255,0.05)">
+                  <div class="text-xs muted">Colour</div>
+                  <div class="font-semibold text-xs" x-text="p.colour || '—'"></div>
+                </div>
+              </div>
+              <div x-show="p.description" class="text-xs muted mb-3 line-clamp-2" x-text="p.description"></div>
+              <div class="text-xl font-black mb-3" x-text="`£${p.price}`"></div>
+              <div class="flex flex-col gap-1.5">
+                <button @click="checkout(p.id)"
+                  :disabled="checkingOut === p.id"
+                  class="btn-primary text-white py-2 rounded-xl text-xs font-semibold w-full disabled:opacity-60"
+                  x-text="checkingOut === p.id ? 'Redirecting...' : 'Buy Now'">
+                </button>
+                <a href="part-exchange.html" class="text-center text-xs font-medium py-1 hover:underline" style="color:#60a5fa">Part Exchange →</a>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PREVIOUSLY SOLD -->
+  <section class="py-16 px-4" style="background:#0D1526" x-show="!loading && soldPhones.length > 0">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-10">
+        <h2 class="text-2xl font-black">Previously Sold</h2>
+        <p class="muted mt-1 text-sm">These have sold — request a restock or place a deposit to secure the next available unit.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <template x-for="p in soldPhones" :key="p.id">
+          <div class="sold-card overflow-hidden">
+            <div class="relative">
+              <div class="phone-img h-40 opacity-40">📱</div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="font-black text-sm px-4 py-1.5 rounded-full" style="background:#FF3B30;color:white">SOLD</span>
+              </div>
+            </div>
+            <div class="p-5">
+              <h3 class="font-bold text-sm muted mb-1" x-text="`${p.model} — ${p.storage || ''} ${p.colour || ''}`.trim()"></h3>
+              <p class="text-xs mb-4" style="color:#6B7280">Sold. Request restock or secure the next unit.</p>
+              <div class="flex flex-col gap-2">
+                <a href="sell.html" class="btn-outline py-2 rounded-xl text-xs font-semibold text-center">Request Restock</a>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 px-4 border-t" style="background:#07080F;border-color:rgba(255,255,255,0.06)">
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="flex items-center justify-center gap-3 mb-3">
+        <svg width="24" height="30" viewBox="0 0 36 44" fill="none"><rect x="1" y="1" width="34" height="42" rx="7" fill="white"/><rect x="3" y="3" width="30" height="38" rx="5" fill="#070C18"/><text x="5" y="32" font-family="Playfair Display, serif" font-size="24" font-weight="800" fill="white">E</text><text x="22" y="36" font-family="Inter, sans-serif" font-size="13" font-style="italic" fill="white">i</text></svg>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:14px;letter-spacing:2px;">EAZY iPHONES</div>
+      </div>
+      <div class="flex justify-center gap-6 text-sm muted mb-4">
+        <a href="buy.html" class="hover:text-white">Buy</a>
+        <a href="sell.html" class="hover:text-white">Sell</a>
+        <a href="part-exchange.html" class="hover:text-white">Part Exchange</a>
+        <a href="membership.html" class="hover:text-white">Membership</a>
+      </div>
+      <div class="text-xs" style="color:#4B5563">© 2026 Eazy iPhones. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    function buyApp() {
+      const SUPABASE_URL = 'https://evtmqqqcmxbpyrsagadx.supabase.co'
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dG1xcXFjbXhicHlyc2FnYWR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDc5MzAsImV4cCI6MjA5ODgyMzkzMH0.QrXiEvY0sUFhk8rQwNRVJRmxTcP1KLbdpvVjQNW5EZ8'
+      const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+      return {
+        mobileMenu: false,
+        loading: true,
+        checkingOut: null,
+        availablePhones: [],
+        soldPhones: [],
+        filterSeries: '',
+        filterStorage: '',
+        filterCondition: '',
+        sortBy: 'featured',
+
+        async init() {
+          const { data, error } = await sb
+            .from('phones')
+            .select('*')
+            .order('featured', { ascending: false })
+            .order('price', { ascending: true })
+          if (!error && data) {
+            this.availablePhones = data.filter(p => !p.sold)
+            this.soldPhones = data.filter(p => p.sold)
+          }
+          this.loading = false
+          this.$nextTick(() => AOS.init({ duration: 750, once: true, easing: 'ease-out-cubic' }))
+        },
+
+        get filteredPhones() {
+          let result = [...this.availablePhones]
+          if (this.filterSeries)    result = result.filter(p => p.model && p.model.includes(` ${this.filterSeries}`))
+          if (this.filterStorage)   result = result.filter(p => p.storage === this.filterStorage)
+          if (this.filterCondition) result = result.filter(p => p.condition === this.filterCondition)
+          if (this.sortBy === 'price-asc')  result.sort((a, b) => a.price - b.price)
+          if (this.sortBy === 'price-desc') result.sort((a, b) => b.price - a.price)
+          if (this.sortBy === 'battery')    result.sort((a, b) => b.battery - a.battery)
+          return result
+        },
+
+        clearFilters() {
+          this.filterSeries = ''
+          this.filterStorage = ''
+          this.filterCondition = ''
+          this.sortBy = 'featured'
+        },
+
+        async checkout(id) {
+          if (!id) { alert('Unable to process this phone. Please try again.'); return }
+          this.checkingOut = id
+          try {
+            const res = await fetch('/api/checkout', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ phoneId: id })
+            })
+            const data = await res.json()
+            if (!res.ok) throw new Error(data.error || 'Something went wrong')
+            window.location.href = data.url
+          } catch (err) {
+            alert(err.message)
+            this.checkingOut = null
+          }
+        },
+
+        batteryColor(b) {
+          if (b >= 90) return '#30D158'
+          if (b >= 80) return '#F5A623'
+          return '#FF3B30'
+        },
+
+        condColor(c) {
+          if (c === 'Excellent') return { bg: 'rgba(48,209,88,0.15)', fg: '#30D158' }
+          if (c === 'Good')      return { bg: 'rgba(245,166,35,0.15)', fg: '#F5A623' }
+          return                        { bg: 'rgba(255,59,48,0.15)',  fg: '#FF6B6B' }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
